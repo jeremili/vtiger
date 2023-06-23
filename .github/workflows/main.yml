@@ -11,7 +11,7 @@ jobs:
       - name: Build and Publish
         uses: elgohr/Publish-Docker-Github-Action@v5
         with:
-          name: jeremili/test/test
+          name: jeremili/vtiger/vtiger
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
