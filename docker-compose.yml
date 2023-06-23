@@ -1,0 +1,81 @@
+# # docker-compose initial pour installer vtiger
+# version: '3'
+# services:
+#   vtiger:
+#     image: javanile/vtiger:7.1.0-php7.4
+#     # build: .
+#     restart: unless-stopped
+#     environment:
+#       - VT_SITE_URL=http://127.0.0.1:8080
+#       - MYSQL_HOST=mysql
+#       - MYSQL_DATABASE=vtiger
+#       - MYSQL_ROOT_PASSWORD=secret
+#     ports:
+#       - 8080:80
+#     depends_on:
+#       - mysql
+#     volumes:
+#       - ./app:/app
+#       - vtiger:/var/lib/vtiger
+#   mysql:
+#     image: mysql:8.0.33
+#     restart: unless-stopped
+#     environment:
+#       - MYSQL_DATABASE=vtiger
+#       - MYSQL_ROOT_PASSWORD=secret
+#     volumes:
+#       - mysql:/var/lib/mysql:rw
+#   phpmyadmin:
+#     image: phpmyadmin
+#     restart: unless-stopped
+#     ports:
+#       - 8081:80
+#     depends_on:
+#       - mysql
+#     environment:
+#       - PMA_HOST=mysql
+#       - PMA_PORT=3306
+# volumes:
+#   mysql:
+#   vtiger:
+
+# docker-compose une fois que vtiger et installé et que l'on a recopié /var/www/html du container dans le repertoire ./app local
+version: '3'
+services:
+  vtiger:
+    # image: javanile/vtiger:7.1.0-php7.4
+    build: .
+    restart: unless-stopped
+    environment:
+      - VT_SITE_URL=http://127.0.0.1:8080
+      - MYSQL_HOST=mysql
+      - MYSQL_DATABASE=vtiger
+      - MYSQL_ROOT_PASSWORD=secret
+    ports:
+      - 8080:80
+    depends_on:
+      - mysql
+    volumes:
+      - ./app:/var/www/html
+      - vtiger:/var/lib/vtiger
+  mysql:
+    image: mysql:8.0.33
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=vtiger
+      - MYSQL_ROOT_PASSWORD=secret
+    volumes:
+      - mysql:/var/lib/mysql:rw
+  phpmyadmin:
+    image: phpmyadmin
+    restart: unless-stopped
+    ports:
+      - 8081:80
+    depends_on:
+      - mysql
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+volumes:
+  mysql:
+  vtiger:
