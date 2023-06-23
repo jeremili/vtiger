@@ -1,0 +1,32 @@
+---
+name: Deployment
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+        packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and Publish
+        uses: elgohr/Publish-Docker-Github-Action@v5
+        with:
+          name: jeremili/test/test
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          tags: "1.2"
+          default_branch: main
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PASSWORD }}
+          script: |
+            cd /var/tmp/app/vtiger-docker
+            make deploy
